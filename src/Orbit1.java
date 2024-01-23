@@ -1,5 +1,4 @@
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 
 public class Orbit1 {
     double totalEnergy;
@@ -29,10 +28,41 @@ public class Orbit1 {
         System.out.print("Energy: ");
         System.out.println(fourDecimalDigits.format(this.totalEnergy));
     }
+    private void eulerRichardson(double x0, double y0, double vx0, double vy0, double dt, double tMax) {
+        DecimalFormat fourDecimalDigits = new DecimalFormat("0.0000");
+        double t = 0;
+        double x, xMid, y, yMid, vx, vxMid,  vy, vyMid, ax, axMid, ay, ayMid ;
+        x = x0;
+        y = y0;
+        vx = vx0;
+        vy = vy0;
+        this.totalEnergy = this.totalE(x, y, vx, vy);
+        System.out.print("Energy: ");
+        System.out.println(fourDecimalDigits.format(this.totalEnergy));
+        while(t < tMax) {
+            ax = this.ax(x, y);
+            ay = this.ay(x, y);
+            xMid = x + vx*0.5*dt;
+            yMid = y + vy*0.5*dt;
+            vxMid = vx + ax*0.5*dt;
+            vyMid = vy + ay*0.5*dt;
+            axMid = this.ax(xMid, yMid);
+            ayMid = this.ay(xMid, yMid);
+            x += vxMid * dt;
+            y += vyMid * dt;
+            vx += axMid * dt;
+            vy += ayMid * dt;
+            t += dt;
+            this.orbit.addPoint(x, y);
+            this.totalEnergy = this.totalE(x, y, vx, vy);
+        }
+        System.out.print("Energy: ");
+        System.out.println(fourDecimalDigits.format(this.totalEnergy));
+    }
     Orbit1(double x0, double y0, double vx0, double vy0, double dt) {
         this.orbit = new Plot("Orbit", -4, 4, 0.2, -4, 4, 0.2);
         this.orbit.setPointSize(1);
-        euler(x0, y0, vx0, vy0, dt, 7);
+        eulerRichardson(x0, y0, vx0, vy0, dt, 7);
     }
 
     private double ax(double x, double y) {
