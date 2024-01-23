@@ -3,11 +3,9 @@ import java.text.NumberFormat;
 
 public class Orbit1 {
     double totalEnergy;
-    Orbit1(double x0, double y0, double vx0, double vy0, double dt) {
-        Plot orbit = new Plot("Orbit", -4, 4, 0.2, -4, 4, 0.2);
-        orbit.setPointSize(1);
+    Plot orbit;
+    private void euler(double x0, double y0, double vx0, double vy0, double dt, double tMax) {
         DecimalFormat fourDecimalDigits = new DecimalFormat("0.0000");
-        double tMax = 7;
         double t = 0;
         double x, y, vx, vy, ax, ay;
         x = x0;
@@ -25,11 +23,16 @@ public class Orbit1 {
             vx += ax * dt;
             vy += ay * dt;
             t += dt;
-            orbit.addPoint(x, y);
+            this.orbit.addPoint(x, y);
             this.totalEnergy = this.totalE(x, y, vx, vy);
         }
         System.out.print("Energy: ");
         System.out.println(fourDecimalDigits.format(this.totalEnergy));
+    }
+    Orbit1(double x0, double y0, double vx0, double vy0, double dt) {
+        this.orbit = new Plot("Orbit", -4, 4, 0.2, -4, 4, 0.2);
+        this.orbit.setPointSize(1);
+        euler(x0, y0, vx0, vy0, dt, 7);
     }
 
     private double ax(double x, double y) {
@@ -51,4 +54,6 @@ public class Orbit1 {
     public static void main(String[] args) {
         new Orbit1(1.5, 0, 0, 2 * Math.PI / Math.sqrt(1.5), 0.001);
     }
+
+
 }
