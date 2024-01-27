@@ -59,10 +59,40 @@ public class Orbit1 {
         System.out.print("Energy: ");
         System.out.println(fourDecimalDigits.format(this.totalEnergy));
     }
+
+    private void verlet(double x0, double y0, double vx0, double vy0, double dt, double tMax) {
+        DecimalFormat fourDecimalDigits = new DecimalFormat("0.0000");
+        double t = 0;
+        double x, y, vx, vy, ax, ay;
+        x = x0;
+        y = y0;
+        vx = vx0;
+        vy = vy0;
+        this.totalEnergy = this.totalE(x, y, vx, vy);
+        System.out.print("Energy: ");
+        System.out.println(fourDecimalDigits.format(this.totalEnergy));
+        ax = this.ax(x, y);
+        ay = this.ay(x, y);
+        while(t < tMax) {
+            x += vx * dt + 0.5 * ax * dt * dt;
+            y += vy * dt + 0.5 * ay * dt * dt;
+            vx += 0.5 * ax * dt;
+            vy += 0.5 * ay * dt;
+            ax = this.ax(x, y);
+            ay = this.ay(x, y);
+            vx += 0.5 * ax * dt;
+            vy += 0.5 * ay * dt;
+            t += dt;
+            this.orbit.addPoint(x, y);
+        }
+        this.totalEnergy = this.totalE(x, y, vx, vy);
+        System.out.print("Energy: ");
+        System.out.println(fourDecimalDigits.format(this.totalEnergy));
+    }
     Orbit1(double x0, double y0, double vx0, double vy0, double dt) {
         this.orbit = new Plot("Orbit", -4, 4, 0.2, -4, 4, 0.2);
         this.orbit.setPointSize(1);
-        eulerRichardson(x0, y0, vx0, vy0, dt, 7);
+        verlet(x0, y0, vx0, vy0, dt, 7);
     }
 
     private double ax(double x, double y) {
