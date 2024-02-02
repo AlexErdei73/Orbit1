@@ -4,7 +4,6 @@ public class Orbit1 {
     double totalEnergy;
     Plot orbit;
     private void euler(double x0, double y0, double vx0, double vy0, double dt, double tMax) {
-        DecimalFormat fourDecimalDigits = new DecimalFormat("0.0000");
         double t = 0;
         double x, y, vx, vy, ax, ay;
         x = x0;
@@ -13,7 +12,7 @@ public class Orbit1 {
         vy = vy0;
         this.totalEnergy = this.totalE(x, y, vx, vy);
         System.out.print("Energy: ");
-        System.out.println(fourDecimalDigits.format(this.totalEnergy));
+        System.out.println(this.totalEnergy);
         while(t < tMax) {
             ax = this.ax(x, y);
             ay = this.ay(x, y);
@@ -26,10 +25,9 @@ public class Orbit1 {
             this.totalEnergy = this.totalE(x, y, vx, vy);
         }
         System.out.print("Energy: ");
-        System.out.println(fourDecimalDigits.format(this.totalEnergy));
+        System.out.println(this.totalEnergy);
     }
     private void eulerRichardson(double x0, double y0, double vx0, double vy0, double dt, double tMax) {
-        DecimalFormat fourDecimalDigits = new DecimalFormat("0.0000");
         double t = 0;
         double x, xMid, y, yMid, vx, vxMid,  vy, vyMid, ax, axMid, ay, ayMid ;
         x = x0;
@@ -38,7 +36,7 @@ public class Orbit1 {
         vy = vy0;
         this.totalEnergy = this.totalE(x, y, vx, vy);
         System.out.print("Energy: ");
-        System.out.println(fourDecimalDigits.format(this.totalEnergy));
+        System.out.println(this.totalEnergy);
         while(t < tMax) {
             ax = this.ax(x, y);
             ay = this.ay(x, y);
@@ -57,23 +55,23 @@ public class Orbit1 {
             this.totalEnergy = this.totalE(x, y, vx, vy);
         }
         System.out.print("Energy: ");
-        System.out.println(fourDecimalDigits.format(this.totalEnergy));
+        System.out.println(this.totalEnergy);
     }
 
-    private void verlet(double x0, double y0, double vx0, double vy0, double dt, double tMax) {
-        DecimalFormat fourDecimalDigits = new DecimalFormat("0.0000");
+    private void verlet(double x0, double y0, double vx0, double vy0, double tolerance, double tMax) {
         double t = 0;
-        double x, y, vx, vy, ax, ay;
+        double x, y, vx, vy, ax, ay, dt;
         x = x0;
         y = y0;
         vx = vx0;
         vy = vy0;
         this.totalEnergy = this.totalE(x, y, vx, vy);
         System.out.print("Energy: ");
-        System.out.println(fourDecimalDigits.format(this.totalEnergy));
+        System.out.println(this.totalEnergy);
         ax = this.ax(x, y);
         ay = this.ay(x, y);
         while(t < tMax) {
+            dt = tolerance * (x*x + y*y);
             x += vx * dt + 0.5 * ax * dt * dt;
             y += vy * dt + 0.5 * ay * dt * dt;
             vx += 0.5 * ax * dt;
@@ -87,12 +85,12 @@ public class Orbit1 {
         }
         this.totalEnergy = this.totalE(x, y, vx, vy);
         System.out.print("Energy: ");
-        System.out.println(fourDecimalDigits.format(this.totalEnergy));
+        System.out.println(this.totalEnergy);
     }
     Orbit1(double x0, double y0, double vx0, double vy0, double dt) {
-        this.orbit = new Plot("Orbit", -4, 4, 0.2, -4, 4, 0.2);
+        this.orbit = new Plot("Orbit", -35, 35, 5, -35, 35, 5);
         this.orbit.setPointSize(1);
-        verlet(x0, y0, vx0, vy0, dt, 7);
+        verlet(x0, y0, vx0, vy0, 0.2*dt, 76);
     }
 
     private double ax(double x, double y) {
@@ -112,8 +110,6 @@ public class Orbit1 {
         return kinE + potE;
     }
     public static void main(String[] args) {
-        new Orbit1(1.5, 0, 0, 2 * Math.PI / Math.sqrt(1.5), 0.001);
+        new Orbit1(0.58, 0, 0, 11.57, 0.001);
     }
-
-
 }
